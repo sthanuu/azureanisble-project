@@ -1,0 +1,152 @@
+- hosts: localhost
+  vars:
+    vmname: panfw01
+    location: eastus
+    address_prefixes: 10.1.0.0/16
+    Mgmt: 10.1.0.0/24
+    Internet: 10.1.1.0/24
+    Intranet: 10.1.2.0/24
+    mgmt_pvtip: 10.1.0.4
+    internet_pvtip: 10.1.1.4
+    intranet_pvtip: 10.1.2.4
+    admin_username: azureuser
+    ssh_key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0QdzuAeq5lSS5GvMommPcUp4WmnJ96XL93SkXrgUKi+EzRmAREq1q3ZAVK3vyGda5lsUki4icms/8n3bhEPX6OWSBLuXwkeGaQ6lvOIzcKTd0fySOapXwws/5YnliJjIZuNkJun1joVWjO1XlKdZpNsYm0peuYmu8sJakDE7Kclo7JGmolCg4L3GA4frXQv2rkNr9nugLp6eULL78BE7XNn/5OF+G4T88keHKJEZpHLQouwJDKnj48KJQAorgt7Ol9SUNWOB+Uq3A8HO4SqiXvF8PXuTd8LkSzXQ1u6PWfERwYAW3DYmXPQmiwsedyGWZMRd+euhX4WOA+z549zcJ
+  tasks:
+      - include_role:
+           name: rg
+      - include_role:
+           name: vnet
+      - include_role:
+           name: Mgmt
+      - include_role:
+           name: Internet
+      - include_role:
+           name: Intranet
+      - include_role:
+           name: panfwpaip
+      - include_role:
+           name: nsg           
+      - include_role:
+           name: panfw
+      - include_role:
+           name: panfwvm
+
+# Creating the Vnet-rg for Webvm & LB
+
+- hosts: localhost
+  vars:
+    vmname: vnet2
+    location: eastus
+    address_prefixes: 10.2.0.0/16
+    address_prefix: 10.2.0.0/24
+    address_pvtip: 10.2.0.4
+  tasks:
+      - include_role:
+           name: rg
+      - include_role:
+           name: aset
+      - include_role:
+           name: vnet
+      - include_role:
+           name: subnet
+      - include_role:
+           name: nsg
+
+# Creating the Webserver01 VM
+
+- hosts: localhost
+  vars:
+    rg: vnet2
+    vmname: webserver01
+    nic_name: webserver01-nic00
+    vm_name: webserver01
+    location: eastus
+    address_pvtip: 10.2.0.4
+    admin_username: azureuser
+    image_name: UbuntuapacheImage
+    ssh_key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0QdzuAeq5lSS5GvMommPcUp4WmnJ96XL93SkXrgUKi+EzRmAREq1q3ZAVK3vyGda5lsUki4icms/8n3bhEPX6OWSBLuXwkeGaQ6lvOIzcKTd0fySOapXwws/5YnliJjIZuNkJun1joVWjO1XlKdZpNsYm0peuYmu8sJakDE7Kclo7JGmolCg4L3GA4frXQv2rkNr9nugLp6eULL78BE7XNn/5OF+G4T88keHKJEZpHLQouwJDKnj48KJQAorgt7Ol9SUNWOB+Uq3A8HO4SqiXvF8PXuTd8LkSzXQ1u6PWfERwYAW3DYmXPQmiwsedyGWZMRd+euhX4WOA+z549zcJ
+  tasks:
+      - include_role:
+           name: psipnic
+      - include_role:
+           name: web-apache
+
+# Creating the webserver02
+
+- hosts: localhost
+  vars:
+    rg: vnet2
+    vmname: webserver02
+    nic_name: webserver02-nic00
+    vm_name: webserver02
+    location: eastus
+    address_pvtip: 10.2.0.5
+    admin_username: azureuser
+    image_name: UbuntuapacheImage
+    ssh_key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0QdzuAeq5lSS5GvMommPcUp4WmnJ96XL93SkXrgUKi+EzRmAREq1q3ZAVK3vyGda5lsUki4icms/8n3bhEPX6OWSBLuXwkeGaQ6lvOIzcKTd0fySOapXwws/5YnliJjIZuNkJun1joVWjO1XlKdZpNsYm0peuYmu8sJakDE7Kclo7JGmolCg4L3GA4frXQv2rkNr9nugLp6eULL78BE7XNn/5OF+G4T88keHKJEZpHLQouwJDKnj48KJQAorgt7Ol9SUNWOB+Uq3A8HO4SqiXvF8PXuTd8LkSzXQ1u6PWfERwYAW3DYmXPQmiwsedyGWZMRd+euhX4WOA+z549zcJ
+  tasks:
+      - include_role:
+           name: psipnic
+      - include_role:
+           name: web-apache
+
+# Creating the Internal load balancer
+
+- hosts: localhost
+  vars:
+    rg: vnet2
+    location: eastus
+    lb_name: testpvtloadbalancer
+    frontendip_name: frontendipconf
+    pvtip_name: testpvtlbip
+    backend_name: backendaddpool
+    probe_name: prob
+    lbrule_name: lbrule
+    address_pvtip: 10.2.0.10
+  tasks:
+      - include_role:
+           name: pslb
+
+           #resource_group: vnet2-rg
+           #location: eastus
+           #lb_name: testpvtloadbalancer
+           #frontendip_name: frontendipconf
+           #pvtip_name: testpvtlbip
+           #backend_name: backendaddpool
+           #probe_name: prob
+           #lbrule_name: lbrule
+
+#### Creating the second PAN  Firewall VM02
+      
+           #- hosts: localhost
+           #  vars:
+           #    vmname: panfw02
+           #    location: eastus
+           #    address_prefixes: 10.3.0.0/16
+           #    Mgmt: 10.3.0.0/24
+           #    Internet: 10.3.1.0/24
+           #    Intranet: 10.3.2.0/24
+           #    mgmt_pvtip: 10.3.0.4
+           #    internet_pvtip: 10.3.1.4
+           #    intranet_pvtip: 10.3.2.4
+           #    admin_username: azureuser
+           #    ssh_key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0QdzuAeq5lSS5GvMommPcUp4WmnJ96XL93SkXrgUKi+EzRmAREq1q3ZAVK3vyGda5lsUki4icms/8n3bhEPX6OWSBLuXwkeGaQ6lvOIzcKTd0fySOapXwws/5YnliJjIZuNkJun1joVWjO1XlKdZpNsYm0peuYmu8sJakDE7Kclo7JGmolCg4L3GA4frXQv2rkNr9nugLp6eULL78BE7XNn/5OF+G4T88keHKJEZpHLQouwJDKnj48KJQAorgt7Ol9SUNWOB+Uq3A8HO4SqiXvF8PXuTd8LkSzXQ1u6PWfERwYAW3DYmXPQmiwsedyGWZMRd+euhX4WOA+z549zcJ
+           #  tasks:
+           #      - include_role:
+           #           name: rg
+           #      - include_role:
+           #           name: vnet
+           #      - include_role:
+           #           name: Mgmt
+           #      - include_role:
+           #           name: Internet
+           #      - include_role:
+           #           name: Intranet
+           #      - include_role:
+           #           name: panfwpaip
+           #      - include_role:
+           #           name: nsg
+           #      - include_role:
+           #           name: panfw
+           #      - include_role:
+           #           name: panfwvm

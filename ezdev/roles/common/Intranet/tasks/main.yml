@@ -1,0 +1,8 @@
+---
+# tasks file for Intranet
+- name: Add subnet
+  azure_rm_subnet:
+    resource_group: "{{ vmname }}-rg"
+    name: "{{ subnet }}"
+    address_prefix: "{{ Intranet }}"
+    virtual_network: "{{ vmname }}-vnet"

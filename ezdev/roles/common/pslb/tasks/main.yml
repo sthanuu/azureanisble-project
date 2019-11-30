@@ -1,0 +1,24 @@
+---
+# tasks file for pslb
+- name: create load balancer
+  azure_rm_loadbalancer:
+        resource_group: "{{ rg }}-rg"
+        name: "{{ lb_name }}"
+        sku: Standard
+        frontend_ip_configurations:
+          - name: "{{ frontendip_name }}"
+            subnet: /subscriptions/68f6b170-cb61-4311-85a1-4f92bfaa44ec/resourceGroups/vnet2-rg/providers/Microsoft.Network/virtualNetworks/vnet2-vnet/subnets/vnet2-subnet
+            private_ip_address: 10.2.0.10
+            private_ip_allocation_method: Static
+        backend_address_pools:
+          - name: "{{ backend_name }}"
+        probes:
+          - name: "{{ probe_name }}"
+            port: 80
+        load_balancing_rules:
+          - name: "{{ lbrule_name }}"
+            frontend_ip_configuration: "{{ frontendip_name }}"
+            backend_address_pool: "{{ backend_name }}"
+            frontend_port: 80
+            backend_port: 80
+            probe: "{{ probe_name }}"

@@ -1,0 +1,15 @@
+---
+# tasks file for nic
+- name: Create a network with mutilple ip configurations
+  azure_rm_networkinterface:
+    name: "{{ vmname }}-nic"
+    resource_group: "{{ vmname }}-rg"
+    subnet_name: "{{ vmname }}-subnet"
+    virtual_network_name: "{{ vmname }}-vnet"
+    security_group_name: "{{ vmname }}-nsg"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: "{{ vmname }}-paip"
+        primary: True
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ address_pvtip }}"

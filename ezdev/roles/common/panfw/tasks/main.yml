@@ -1,0 +1,40 @@
+---
+# tasks file for panfw
+- name: Create a network with mutilple ip configurations
+  azure_rm_networkinterface:
+    name: "{{ vmname }}-nic00"
+    resource_group: "{{ vmname }}-rg"
+    subnet_name: Mgmt
+    virtual_network_name: "{{ vmname }}-vnet"
+    security_group_name: "{{ vmname }}-nsg"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: "{{ vmname }}-mgmt-paip"
+        primary: True
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ mgmt_pvtip }}"
+- name: Create a network with mutilple ip configurations
+  azure_rm_networkinterface:
+    name: "{{ vmname }}-nic01"
+    resource_group: "{{ vmname }}-rg"
+    subnet_name: Internet
+    virtual_network_name: "{{ vmname }}-vnet"
+    security_group_name: "{{  vmname }}-nsg"
+    ip_configurations:
+      - name: ipconfig1
+        public_ip_address_name: "{{ vmname }}-Internet-paip"
+        primary: True
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ internet_pvtip }}"
+- name: Create a network interface with private IP address only (no Public IP)
+  azure_rm_networkinterface:
+    name: "{{ vmname }}-nic02"
+    resource_group: "{{ vmname }}-rg"
+    virtual_network_name: "{{  vmname }}-vnet"
+    subnet_name: Intranet
+    security_group_name: "{{  vmname }}-nsg"
+    ip_configurations:
+      - name: ipconfig1
+        private_ip_allocation_method: Static
+        private_ip_address: "{{ intranet_pvtip }}"
+        primary: True

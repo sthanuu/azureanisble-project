@@ -1,0 +1,25 @@
+---
+# tasks file for panfwvm
+- name: Create VM
+  azure_rm_virtualmachine:
+    resource_group: "{{vmname }}-rg"
+    name: "{{ vmname }}-vm"
+    vm_size: Standard_D3_v2
+    admin_username: "{{ admin_username }}"
+    ssh_password_enabled: false
+    ssh_public_keys:
+      - path: /home/azureuser/.ssh/authorized_keys
+        key_data: "{{ ssh_key_data }}"
+    network_interfaces: 
+           - "{{ vmname }}-nic00"
+           - "{{ vmname }}-nic01"
+           - "{{ vmname }}-nic02"             
+    plan: 
+      name: bundle2
+      product: vmseries1
+      publisher: paloaltonetworks
+    image:
+      offer: vmseries1
+      publisher: paloaltonetworks
+      sku: 'bundle2'
+      version: latest

@@ -1,0 +1,15 @@
+---
+# tasks file for psipnic
+- name: Create a network interface with private IP address only (no Public IP)
+  azure_rm_networkinterface:
+    name: "{{ vm_name }}-nic00"
+    resource_group: "{{ rg }}-rg"
+    virtual_network_name: "{{ rg }}-vnet"
+    subnet_name: "{{ rg }}-subnet"
+    security_group_name: "{{ rg }}-nsg"
+    ip_configurations:
+      - name: ipconfig1
+        private_ip_allocation_method: Static
+        private_ip_address: "{{address_pvtip }}"
+        primary: True
+
