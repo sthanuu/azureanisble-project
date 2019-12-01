@@ -39,7 +39,6 @@
     location: eastus
     address_prefixes: 10.2.0.0/16
     address_prefix: 10.2.0.0/24
-    address_pvtip: 10.2.0.4
   tasks:
       - include_role:
            name: rg
@@ -57,8 +56,6 @@
 - hosts: localhost
   vars:
     rg: vnet2
-    vmname: webserver01
-    nic_name: webserver01-nic00
     vm_name: webserver01
     location: eastus
     address_pvtip: 10.2.0.4
@@ -76,8 +73,6 @@
 - hosts: localhost
   vars:
     rg: vnet2
-    vmname: webserver02
-    nic_name: webserver02-nic00
     vm_name: webserver02
     location: eastus
     address_pvtip: 10.2.0.5

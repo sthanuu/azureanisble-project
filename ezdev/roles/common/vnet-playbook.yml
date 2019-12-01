@@ -1,0 +1,37 @@
+# Creating the Vnet 02 
+
+- hosts: localhost
+  vars:
+    vmname: vnet2
+    location: eastus
+    address_prefixes: 10.2.0.0/16
+    address_prefix: 10.2.0.0/24
+    address_pvtip: 10.2.0.4
+  tasks:
+      - include_role:
+           name: rg
+      - include_role:
+           name: aset
+      - include_role:
+           name: vnet
+      - include_role:
+           name: subnet
+
+# Creating the Vnet 04
+
+- hosts: localhost
+  vars:
+    vmname: vnet4
+    location: eastus
+    address_prefixes: 10.4.0.0/16
+    address_prefix: 10.4.0.0/24
+    address_pvtip: 10.4.0.4
+  tasks:
+      - include_role:
+           name: rg
+      - include_role:
+           name: aset
+      - include_role:
+           name: vnet
+      - include_role:
+           name: subnet

@@ -12,6 +12,8 @@
             private_ip_allocation_method: Static
         backend_address_pools:
           - name: "{{ backend_name }}"
+            target:
+                - "{{ vm_name }}"
         probes:
           - name: "{{ probe_name }}"
             port: 80

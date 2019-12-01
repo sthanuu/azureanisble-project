@@ -2,10 +2,10 @@
 # tasks file for paip
 - name: Create public IP address 
   azure_rm_publicipaddress:
-    resource_group: "{{ vmname }}-rg"
+    resource_group: "{{ rg }}-rg"
     allocation_method: Static
     sku: Standard
-    name: "{{ vmname }}-paip"
+    name: "{{ vm_name }}-paip"
   register: output_ip_address
 - name: Dump public IP for VM which will be created
   debug:

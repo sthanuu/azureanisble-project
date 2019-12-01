@@ -1,0 +1,15 @@
+- hosts: localhost
+  vars:
+    rg: vnet2
+    location: eastus
+    vm_name: linuxnginx
+    lb_name: testpvtloadbalancer
+    frontendip_name: frontendipconf
+    pvtip_name: testpvtlbip
+    backend_name: backendaddpool
+    probe_name: prob
+    lbrule_name: lbrule
+    address_pvtip: 10.2.0.20
+  tasks:
+      - include_role:
+           name: pslb

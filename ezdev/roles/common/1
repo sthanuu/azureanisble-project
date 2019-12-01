@@ -1,5 +1,5 @@
 ---
-# tasks file for web-apache
+# tasks file for ubuntuvm
 - name: Create VM
   azure_rm_virtualmachine:
     resource_group: "{{ rg }}-rg"

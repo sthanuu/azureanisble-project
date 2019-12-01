@@ -1,0 +1,42 @@
+# Creation of Pan firewall Nwetwork 01
+- hosts: localhost
+  vars:
+    vmname: panfw01
+    location: eastus
+    address_prefixes: 10.1.0.0/16
+    Mgmt: 10.1.0.0/24
+    Internet: 10.1.1.0/24
+    Intranet: 10.1.2.0/24
+  tasks:
+      - include_role:
+           name: rg
+      - include_role:
+           name: vnet
+      - include_role:
+           name: Mgmt
+      - include_role:
+           name: Internet
+      - include_role:
+           name: Intranet
+
+#### Creating the  PAN  Firewall Network 02
+      
+- hosts: localhost
+  vars:
+    vmname: panfw02
+    location: eastus
+    address_prefixes: 10.3.0.0/16
+    Mgmt: 10.3.0.0/24
+    Internet: 10.3.1.0/24
+    Intranet: 10.3.2.0/24
+  tasks:
+      - include_role:
+           name: rg
+      - include_role:
+           name: vnet
+      - include_role:
+           name: Mgmt
+      - include_role:
+           name: Internet
+      - include_role:
+           name: Intranet

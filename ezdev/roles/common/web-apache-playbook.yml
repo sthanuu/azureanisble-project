@@ -1,0 +1,33 @@
+# Creating the Webserver01 VM
+
+- hosts: localhost
+  vars:
+    rg: vnet2
+    vm_name: webserver01
+    location: eastus
+    address_pvtip: 10.2.0.4
+    admin_username: azureuser
+    image_name: UbuntuapacheImage
+    ssh_key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0QdzuAeq5lSS5GvMommPcUp4WmnJ96XL93SkXrgUKi+EzRmAREq1q3ZAVK3vyGda5lsUki4icms/8n3bhEPX6OWSBLuXwkeGaQ6lvOIzcKTd0fySOapXwws/5YnliJjIZuNkJun1joVWjO1XlKdZpNsYm0peuYmu8sJakDE7Kclo7JGmolCg4L3GA4frXQv2rkNr9nugLp6eULL78BE7XNn/5OF+G4T88keHKJEZpHLQouwJDKnj48KJQAorgt7Ol9SUNWOB+Uq3A8HO4SqiXvF8PXuTd8LkSzXQ1u6PWfERwYAW3DYmXPQmiwsedyGWZMRd+euhX4WOA+z549zcJ
+  tasks:
+      - include_role:
+           name: psipnic
+      - include_role:
+           name: web-apache
+
+# Creating the webserver02
+
+- hosts: localhost
+  vars:
+    rg: vnet2
+    vm_name: webserver02
+    location: eastus
+    address_pvtip: 10.2.0.5
+    admin_username: azureuser
+    image_name: UbuntuapacheImage
+    ssh_key_data: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC0QdzuAeq5lSS5GvMommPcUp4WmnJ96XL93SkXrgUKi+EzRmAREq1q3ZAVK3vyGda5lsUki4icms/8n3bhEPX6OWSBLuXwkeGaQ6lvOIzcKTd0fySOapXwws/5YnliJjIZuNkJun1joVWjO1XlKdZpNsYm0peuYmu8sJakDE7Kclo7JGmolCg4L3GA4frXQv2rkNr9nugLp6eULL78BE7XNn/5OF+G4T88keHKJEZpHLQouwJDKnj48KJQAorgt7Ol9SUNWOB+Uq3A8HO4SqiXvF8PXuTd8LkSzXQ1u6PWfERwYAW3DYmXPQmiwsedyGWZMRd+euhX4WOA+z549zcJ
+  tasks:
+      - include_role:
+           name: psipnic
+      - include_role:
+           name: web-apache
